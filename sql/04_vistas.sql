@@ -1,0 +1,3 @@
+-- SolazoDB | 04 - Vistas
+-- Línea 4: vistas para exponer lecturas e indicadores energéticos.
+-- Pendiente: implementar después de definir tablas, unidades y fórmulas.
