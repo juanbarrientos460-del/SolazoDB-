@@ -1,0 +1,4 @@
+-- SolazoDB | 01 - Esquemas
+-- Ejecutar en la base de datos destino.
+-- Definir los esquemas definitivos después de aprobar el modelo de datos.
+-- Pendiente: establecer nombres y permisos de los esquemas.
