@@ -1,0 +1,3 @@
+-- SolazoDB | 07 - Consultas de negocio
+-- Documentar la pregunta de negocio, consulta, resultado esperado e interpretación.
+-- Pendiente: definir consultas con el equipo.
