@@ -1,0 +1,3 @@
+-- SolazoDB | 02 - Tablas
+-- Pendiente: generar CREATE TABLE a partir del modelo relacional aprobado.
+-- Incluir tipos PostgreSQL, claves primarias y nulabilidad documentada.
