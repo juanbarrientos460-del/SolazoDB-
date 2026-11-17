@@ -1,0 +1,3 @@
+-- SolazoDB | 06 - Funciones de ventana
+-- Línea 4: análisis temporal usando OVER, PARTITION BY y ORDER BY.
+-- Evaluar LAG, LEAD, SUM, AVG y funciones de ranking según las columnas reales.
