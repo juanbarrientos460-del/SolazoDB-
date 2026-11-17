@@ -1,0 +1,4 @@
+-- SolazoDB | 08 - Validación de datos
+-- Pendiente: completar con los nombres y columnas del modelo aprobado.
+-- Validar conteos, nulos, duplicados, rangos y consistencia temporal.
+-- Evidenciar el total de lecturas cargadas y verificar el mínimo de 1.000.000.
