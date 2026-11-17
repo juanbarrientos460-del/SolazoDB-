@@ -1,0 +1,30 @@
+# Datos originales y archivos de gran tamaño
+data/raw/*
+!data/raw/README.md
+
+# Datos procesados: versionar solo muestras pequeñas y documentadas
+data/processed/*
+!data/processed/README.md
+
+# Archivos temporales
+*.tmp
+*.log
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.pytest_cache/
+
+# Exportaciones y copias locales
+*.dump
+*.backup
+*.bak
+*.csv
+!data/samples/*.csv
