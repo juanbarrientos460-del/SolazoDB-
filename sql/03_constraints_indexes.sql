@@ -1,0 +1,3 @@
+-- SolazoDB | 03 - Restricciones e índices
+-- Pendiente: definir claves foráneas, UNIQUE, CHECK e índices.
+-- Justificar los índices según las consultas de negocio y el volumen esperado.
