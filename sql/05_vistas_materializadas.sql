@@ -1,0 +1,3 @@
+-- SolazoDB | 05 - Vistas materializadas
+-- Línea 4: agregaciones de indicadores que se consulten repetidamente.
+-- Pendiente: definir granularidad, índices y estrategia REFRESH MATERIALIZED VIEW.
