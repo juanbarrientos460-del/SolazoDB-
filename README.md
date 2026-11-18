@@ -73,6 +73,6 @@ Este repositorio contiene la estructura y las plantillas iniciales. El modelo f√
 
 ## Equipo
 
-- Integrantes: SEBAS CEBALLOS
+- Integrantes: SEBAS CEBALLOS jUAN LOPEZ 
 - Asignatura: BASE DE DATOS  I 
 - Instituci√≥n: PASCUALI 
