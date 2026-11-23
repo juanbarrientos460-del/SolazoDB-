@@ -2,49 +2,125 @@
 
 ## Identificación de la fuente
 
-- Nombre del dataset: OpenCEM (referencia indicada para el proyecto).
-- URL oficial o ubicación de descarga: pendiente de registrar.
-- Organismo/proyecto responsable: pendiente de verificar.
-- Fecha de consulta/descarga: pendiente.
-- Licencia y condiciones de uso: pendiente de verificar.
-- Archivo(s) seleccionado(s): pendiente.
-- Versión o fecha de publicación: pendiente.
+- **Dataset:** OpenCEM: Multimodal photovoltaic and battery microgrid dataset with context records and sky imagery.
+- **Versión:** 1.0.0.
+- **Autores:** Bartels, T. S., Wu, R., Lu, X., Chen, Y., Lu, Y., Xia, F., Yang, H., Chen, Y., & Li, T.
+- **Repositorio de descarga:** https://zenodo.org/records/21436223
+- **DOI:** https://doi.org/10.5281/zenodo.21436223
+- **Archivo SQLite inspeccionado:** `opencem-v1.0.0.sqlite`, obtenido del archivo comprimido `opencem-v1.0.0.sqlite.zst`.
+- **Archivo complementario:** `opencem-v1.0.0-support.zip`.
+- **Archivo de checksums:** `opencem-v1.0.0-SHA256SUMS.txt` (verificación pendiente de documentar).
+- **Fecha de consulta/descarga:** pendiente de registrar.
+- **Licencia:** revisar y registrar las condiciones de `LICENSE-DATA.txt` antes de redistribuir datos.
+- **Alcance:** telemetría de una microrred híbrida con mediciones asociadas a inversores. Las imágenes de cielo no forman parte del alcance actual de SolarDB.
 
-## Descripción técnica
+Referencia bibliográfica:
 
-Completar después de inspeccionar los archivos reales:
+> Bartels, T. S., Wu, R., Lu, X., Chen, Y., Lu, Y., Xia, F., Yang, H., Chen, Y., & Li, T. (2026). *OpenCEM: Multimodal photovoltaic and battery microgrid dataset with context records and sky imagery* (Version 1.0.0) [Dataset]. Zenodo. https://doi.org/10.5281/zenodo.21436223
 
-| Elemento | Resultado |
-|---|---|
-| Formato(s) | Pendiente |
-| Número de archivos | Pendiente |
-| Número de filas/lecturas | Pendiente |
-| Número de columnas | Pendiente |
-| Granularidad temporal | Pendiente |
-| Fecha inicial y final | Pendiente |
-| Zona horaria | Pendiente |
-| Unidades de medida | Pendiente |
-| Valores nulos | Pendiente |
-| Duplicados | Pendiente |
+## Inventario inicial de tablas SQLite
 
-## Inventario de variables
+La base SQLite fue abierta en DBeaver y se identificaron ocho tablas principales. Los conteos corresponden a la inspección realizada sobre la copia local del archivo:
 
-Registrar cada campo tal como aparece en la fuente, su tipo original, significado, unidad, rango y tratamiento aplicado. No renombrar ni inferir unidades sin evidencia.
+| Tabla | Registros |
+|---|---:|
+| `analog_measurements` | 2.989.759 |
+| `context` | 25.178 |
+| `fault_history` | 2.129.517 |
+| `settings` | 2.284.775 |
+| `specs` | 1.333.174 |
+| `statistics` | 2.285.904 |
+| `status` | 2.240.052 |
+| `totals` | 2.279.918 |
 
-| Campo original | Tipo original | Significado | Unidad | Nulos | Transformación |
-|---|---|---|---|---|---|
-| Pendiente de inspección | | | | | |
+La tabla `analog_measurements` contiene 2.989.759 lecturas, por lo que el volumen disponible supera el requisito académico de cargar al menos un millón de lecturas. El cumplimiento definitivo se demostrará después de cargar y validar los datos en PostgreSQL.
 
-## Calidad y preparación
+## Periodo y granularidad temporal observada
 
-- Validación de fechas y orden temporal.
-- Detección de duplicados.
-- Tratamiento de valores nulos.
-- Revisión de rangos y valores atípicos.
-- Consistencia de unidades.
-- Identificación de intervalos faltantes.
-- Trazabilidad entre el dato original y el registro cargado.
+Para `analog_measurements`, el campo `read_ts` almacena marcas de tiempo Unix con decimales. La consulta de mínimo y máximo devolvió:
 
-## Evidencias
+- Primera lectura: `1752327095.265811` = **2025-07-12 13:31:35 UTC**.
+- Última lectura: `1783919633.451776` = **2026-07-13 05:13:53 UTC**.
+- Total: **2.989.759 lecturas**.
 
-Agregar comandos, capturas de DBeaver, perfiles de datos y resultados de validación cuando estén disponibles.
+La granularidad o intervalo esperado entre lecturas todavía debe determinarse; no se debe asumir una frecuencia fija.
+
+## Distribución por inversor
+
+La consulta agrupada por `inverter` identificó dos inversores:
+
+| Inversor | Registros | Primera lectura (Unix) | Última lectura (Unix) |
+|---|---:|---:|---:|
+| 1 | 1.610.276 | 1752327095.265811 | 1783919633.451776 |
+| 2 | 1.379.483 | 1752472412.761199 | 1782106524.235112 |
+| **Total** | **2.989.759** | | |
+
+El inversor 1 representa aproximadamente el 53,86 % de las lecturas y el inversor 2 el 46,14 %. La diferencia entre ambos es de 230.793 registros. Sus periodos de actividad no son idénticos.
+
+## Estructura original y observaciones preliminares
+
+La inspección del DDL de las ocho tablas permitió observar:
+
+- `analog_measurements` es una tabla ancha que reúne numerosas variables eléctricas y operativas en columnas.
+- `fault_history` contiene grupos de columnas repetidas (`faulthistoryrecord00` a `faulthistoryrecord31`) y sus campos de tiempo asociados. Este diseño debe evaluarse al elaborar el modelo lógico.
+- `settings` agrupa parámetros de configuración del inversor.
+- `statistics` contiene campos con tipos numéricos y campos declarados como texto; se debe investigar su contenido antes de definir conversiones.
+- En el DDL inspeccionado, `context` declara una columna `id` como clave primaria. Las demás tablas revisadas no declaran una clave primaria explícita en su sentencia CREATE TABLE.
+- Los campos `read_ts` e `inverter` aparecen como NOT NULL en las tablas de telemetría revisadas.
+
+Estas observaciones describen la estructura de origen; no demuestran por sí solas que existan errores en los datos.
+
+## Validaciones de calidad realizadas en analog_measurements
+
+### Identificación y duplicados
+
+- Registros con `inverter` nulo: **0**.
+- Registros con `read_ts` nulo: **0**.
+- La consulta agrupada por `inverter, read_ts` con `HAVING COUNT(*) > 1` no devolvió filas. No se encontraron duplicados para esa combinación en la tabla inspeccionada.
+- Por lo anterior, la combinación `(inverter, read_ts)` es candidata a clave primaria compuesta para las lecturas analógicas. Debe volver a validarse en la migración y en el diseño final.
+
+### Rangos observados
+
+| Variable | Rango global observado |
+|---|---:|
+| `battsoc` | 6 a 100 |
+| `battvolt` | 0,0 a 57,6 |
+| `pv1power` | 0 a 3.933 |
+
+Comparación por inversor:
+
+| Variable | Inversor 1 | Inversor 2 |
+|---|---:|---:|
+| `battsoc` mínimo | 6 | 10 |
+| `battsoc` máximo | 100 | 100 |
+| `battvolt` mínimo | 29,0 | 0,0 |
+| `battvolt` máximo | 57,5 | 57,6 |
+| `pv1power` mínimo | 0 | 0 |
+| `pv1power` máximo | 3.902 | 3.933 |
+
+Las unidades de estas variables deben confirmarse en la documentación técnica del dataset; no se asignan unidades basándose únicamente en los nombres de columna.
+
+### Lecturas con voltaje de batería igual a cero
+
+La consulta de conteo de `battvolt = 0` devolvió:
+
+| Inversor | Lecturas con `battvolt = 0` |
+|---|---:|
+| 2 | 3 |
+
+No se encontraron filas para el inversor 1. Las tres lecturas del inversor 2 representan aproximadamente el 0,00010 % de las 2.989.759 lecturas analógicas. Se registran como casos que requieren revisión contextual; **no se clasifican todavía como errores ni se eliminan**.
+
+## Pendientes de análisis
+
+- Verificar el checksum SHA-256 del archivo descargado.
+- Registrar fecha de descarga y revisar la licencia de datos.
+- Consultar la documentación de OpenCEM para confirmar significado y unidades de las variables.
+- Analizar intervalos temporales faltantes y frecuencia de muestreo.
+- Investigar las tres lecturas con `battvolt = 0` mediante su fecha, estado y demás variables.
+- Perfilar valores nulos y rangos en otras columnas y tablas.
+- Diseñar el modelo conceptual y lógico a partir de la estructura y semántica verificadas.
+- Migrar a PostgreSQL y demostrar conteos e integridad después de la carga.
+
+## Evidencias y consultas
+
+Las consultas de conteo, periodo, distribución por inversor, duplicados, valores nulos, rangos y lecturas con voltaje cero se ejecutaron en DBeaver sobre la conexión SQLite `opencem-v1.0.0.sqlite`. Conservar los resultados o capturas de estas consultas como evidencia del análisis de la fuente.
