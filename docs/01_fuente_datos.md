@@ -124,3 +124,18 @@ No se encontraron filas para el inversor 1. Las tres lecturas del inversor 2 rep
 ## Evidencias y consultas
 
 Las consultas de conteo, periodo, distribución por inversor, duplicados, valores nulos, rangos y lecturas con voltaje cero se ejecutaron en DBeaver sobre la conexión SQLite `opencem-v1.0.0.sqlite`. Conservar los resultados o capturas de estas consultas como evidencia del análisis de la fuente.
+
+
+### Revisión contextual de las tres lecturas con voltaje de batería cero
+
+Se consultaron las filas de `analog_measurements` donde `battvolt = 0`. Las tres corresponden al inversor 2:
+
+| Fecha UTC | `battvolt` | `battsoc` | `battcurr` | `pv1volt` | `pv1curr` | `pv1power` | `linevolta` | `linecurra` | `gridpowerw_a` |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 2026-05-12 10:16:17 | 0,0 | 87 | 0,0 | 0,0 | 0,0 | 0 | 0,0 | 0,0 | 0 |
+| 2026-05-15 04:10:28 | 0,0 | 87 | 0,0 | 0,0 | 0,0 | 0 | 0,0 | 0,0 | 0 |
+| 2026-06-19 04:35:37 | 0,0 | 87 | 0,0 | 0,0 | 0,0 | 0 | 0,0 | 0,0 | 0 |
+
+En las tres filas también se observaron `linevolta = 0`, `linecurra = 0` y `gridpowerw_a = 0`. El estado de carga `battsoc` se mantuvo en 87. El patrón muestra que el voltaje de batería cero coincide con ceros en varias otras variables eléctricas de la misma lectura.
+
+La interpretación sigue siendo **pendiente de validación**: podría relacionarse con inactividad, desconexión o una condición de adquisición/registro, pero estas posibilidades no pueden confirmarse solo con las columnas consultadas. No se eliminan ni se convierten estos valores durante esta etapa exploratoria.
