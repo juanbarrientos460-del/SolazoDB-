@@ -24,3 +24,8 @@ Esta carpeta está reservada para los archivos originales descargados desde la f
 ## Estado de inspección
 
 La base SQLite fue abierta en DBeaver. Se identificaron ocho tablas principales y se contaron sus registros. El inventario, periodo de mediciones, distribución de lecturas por inversor y primeras validaciones de calidad están documentados en `docs/01_fuente_datos.md`.
+
+
+## Hallazgo adicional de calidad
+
+En la revisión de las filas de `analog_measurements` con `battvolt = 0` se identificaron tres registros, todos del inversor 2 (fechas UTC: 2026-05-12 10:16:17, 2026-05-15 04:10:28 y 2026-06-19 04:35:37). En los tres también aparecen en cero `battcurr`, `pv1volt`, `pv1curr`, `pv1power`, `linevolta`, `linecurra` y `gridpowerw_a`, mientras `battsoc` registra 87. El patrón queda documentado como caso pendiente de interpretación; no se clasifica como error ni se modifica el dato original.
