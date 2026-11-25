@@ -325,3 +325,10 @@ La ficha también establece que los valores ya están convertidos y no requieren
 El diccionario de columnas define `fault_history.faulthistoryrecord00_time` como un valor `REAL` que contiene el tiempo calibrado del evento decodificado desde el payload histórico `faulthistoryrecord00`. Está expresado como timestamp Unix fraccional en segundos desde 1970-01-01 UTC. El valor ya está convertido y no requiere escalado adicional. `SQL NULL` representa un tiempo ausente o no disponible y no debe imputarse.
 
 **Implicación para PostgreSQL:** se puede transformar a `TIMESTAMPTZ` mediante conversión explícita desde segundos Unix, manteniendo la zona horaria UTC. Este campo debe conservar su asociación con el payload `faulthistoryrecord00`; no debe confundirse con la hora de inserción de la fila.
+
+
+### Estructura común de las 32 marcas de tiempo de `fault_history`
+
+La revisión del diccionario confirma que las 32 columnas `faulthistoryrecord00_time` a `faulthistoryrecord31_time` (posiciones 34 a 65) comparten la misma definición: tipo SQLite `REAL`, segundos Unix fraccionales en UTC desde 1970-01-01, tiempo de evento calibrado y decodificado desde el payload correspondiente. Los valores ya están convertidos y no requieren escalado adicional. `SQL NULL` significa tiempo ausente o no disponible y no debe imputarse. La descripción de cada columna cambia únicamente para referirse al payload `faulthistoryrecordXX` correspondiente.
+
+**Implicación para el diseño:** aplicar una regla uniforme de conversión a tipo temporal con zona horaria en PostgreSQL para las 32 marcas, manteniendo cada tiempo asociado a su payload correspondiente. La conversión debe tratar el valor original como segundos Unix, no como milisegundos, y preservar los valores nulos.
