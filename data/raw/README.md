@@ -53,3 +53,8 @@ Una consulta conjunta de seis variables (`battsoc`, `battvolt`, `battcurr`, `pv1
 | 2 | 1.379.483 | 55.657 | 65.606 |
 
 La concentración de nulos simultáneos en el inversor 2 es un patrón relevante para el análisis de calidad. No se conoce aún su causa; no se deben reemplazar esos valores por cero de forma automática.
+
+
+## Distribución diaria de registros con seis variables nulas
+
+Los 15 días con más registros donde `battsoc`, `battvolt`, `battcurr`, `pv1power`, `pv1volt` y `pv1curr` son nulas simultáneamente corresponden al inversor 2 y se concentran entre el 13 de mayo y el 2 de junio de 2026. Los conteos diarios se mantienen alrededor de 1.449 registros (con dos días en 1.450). Es un patrón temporal que requiere contraste con el volumen total de lecturas por día y con otras tablas; no confirma por sí mismo la causa de los datos ausentes.
