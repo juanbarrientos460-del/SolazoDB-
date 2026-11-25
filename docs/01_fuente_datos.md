@@ -332,3 +332,16 @@ El diccionario de columnas define `fault_history.faulthistoryrecord00_time` como
 La revisión del diccionario confirma que las 32 columnas `faulthistoryrecord00_time` a `faulthistoryrecord31_time` (posiciones 34 a 65) comparten la misma definición: tipo SQLite `REAL`, segundos Unix fraccionales en UTC desde 1970-01-01, tiempo de evento calibrado y decodificado desde el payload correspondiente. Los valores ya están convertidos y no requieren escalado adicional. `SQL NULL` significa tiempo ausente o no disponible y no debe imputarse. La descripción de cada columna cambia únicamente para referirse al payload `faulthistoryrecordXX` correspondiente.
 
 **Implicación para el diseño:** aplicar una regla uniforme de conversión a tipo temporal con zona horaria en PostgreSQL para las 32 marcas, manteniendo cada tiempo asociado a su payload correspondiente. La conversión debe tratar el valor original como segundos Unix, no como milisegundos, y preservar los valores nulos.
+
+
+### Análisis de la tabla `settings`
+
+La tabla `settings` contiene 176 columnas. Su estructura incluye la identificación temporal (`read_ts`, tipo `REAL`, obligatorio) y el inversor (`inverter`, tipo `INTEGER`, obligatorio), además de parámetros de configuración eléctrica, prioridades de operación, batería, protecciones de red, programación de carga/descarga y controles de potencia.
+
+El conteo por inversor en SQLite arrojó 1.280.052 registros para el inversor 1 y 1.004.723 para el inversor 2, para un total de 2.284.775. El periodo observado fue:
+- Inversor 1: `read_ts` mínimo 1752327095.265811 y máximo 1783919633.451776.
+- Inversor 2: `read_ts` mínimo 1752472412.761199 y máximo 1782106524.235112.
+
+La consulta de duplicados agrupando por `(inverter, read_ts)` y filtrando grupos con más de una fila no devolvió resultados. Por tanto, esa combinación es una **clave primaria compuesta candidata** para `settings`; su adopción definitiva queda sujeta a confirmar la semántica y las relaciones con las demás tablas.
+
+**Observación de modelado:** los campos `reserve` y `battsetreserve` son de tipo SQLite `TEXT`; su contenido y formato deben inspeccionarse antes de decidir su representación en PostgreSQL. No se deben asumir unidades o significados de los parámetros únicamente a partir de sus nombres.
