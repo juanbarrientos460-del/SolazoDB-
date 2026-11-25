@@ -441,3 +441,15 @@ Se agruparon las combinaciones no nulas de `outvoltset` y `outfreqset`:
 | 2 | 946.646 | 1.056 | 1.030 |
 
 En todos los grupos observados, los valores disponibles fueron 230.0 para `outvoltset` y 50.0 para `outfreqset`. Esto muestra coincidencia de los valores registrados entre ambos inversores. También existen registros parciales en los que uno de los dos atributos es SQL NULL. Se preserva esa ausencia y no se completa por inferencia.
+
+
+### Valores observados de `settings.maxchgcurrset`
+
+La agrupación de valores no nulos de `maxchgcurrset` mostró un único valor en ambos inversores:
+
+| Inversor | Valor observado | Registros |
+|---:|---:|---:|
+| 1 | 80.0 | 1.278.709 |
+| 2 | 80.0 | 947.776 |
+
+Por tanto, todos los valores no nulos observados de este parámetro son 80.0 en ambos inversores. Se mantiene la distinción entre registros con valor y registros SQL NULL; no se completa el dato ausente por inferencia.
