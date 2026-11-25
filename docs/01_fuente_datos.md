@@ -554,3 +554,12 @@ Se revisaron los valores no nulos de seis columnas relacionadas con la programac
 | `dischgendtime1` | 1.278.453 | 947.738 |
 
 **Interpretación y tratamiento:** en estas seis columnas, los valores no nulos observados son constantes e iguales a cero para ambos inversores. Esto describe el contenido del conjunto de datos, pero no permite concluir por sí solo que la programación esté desactivada ni que las horas representen una hora específica. Se conserva el valor original y la nulabilidad; no se eliminan columnas ni se asigna significado funcional a `0` sin una definición oficial del fabricante o del diccionario de OpenCEM. Esta validación cubre únicamente las seis columnas listadas y no los demás periodos de programación.
+
+
+### Combinaciones observadas en los periodos 2 y 3 de programación de `settings`
+
+Se agruparon las combinaciones de ocho columnas correspondientes a los horarios de carga y descarga de los periodos 2 y 3 (`chargestarttime2`, `chargeendtime2`, `chargestarttime3`, `chargeendtime3`, `dischgstarttime2`, `dischgendtime2`, `dischgstarttime3`, `dischgendtime3`). La consulta mostró las primeras 20 combinaciones globales y, por el límite aplicado, todas las filas devueltas pertenecieron al inversor 1.
+
+En el inversor 1, la combinación más frecuente contiene cero en las ocho columnas y aparece 1.273.995 veces. También se observaron combinaciones con valores cero y algunas columnas SQL NULL; por ejemplo, una combinación con las ocho columnas SQL NULL aparece 932 veces. Las demás combinaciones devueltas presentan distintas posiciones con valores cero o SQL NULL.
+
+**Alcance e interpretación:** este resultado no permite concluir que el inversor 2 tenga el mismo patrón, porque el `LIMIT 20` global no mostró sus combinaciones. Tampoco se asigna significado funcional a los ceros ni a los NULL: se conservan como datos distintos. Se requiere una consulta con ranking separado por inversor para comparar ambos equipos de forma válida.
