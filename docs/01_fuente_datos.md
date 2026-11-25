@@ -417,3 +417,15 @@ Se desglosaron los valores ausentes de cuatro parámetros por inversor:
 El atributo `battype` presenta una proporción muy alta de valores SQL NULL en ambos inversores (aproximadamente 96,3 % en el inversor 1 y 95,4 % en el inversor 2). En cambio, los parámetros `outvoltset`, `cvvolt` y `floatvolt` tienen pocos nulos en el inversor 1 (alrededor de 0,10–0,12 %) y muchos más en el inversor 2 (alrededor de 5,7 %).
 
 La diferencia entre inversores se conserva como una observación descriptiva de disponibilidad de datos. No se infiere su causa. Se recomienda mantener estos campos anulables en el modelo hasta verificar sus definiciones y reglas de captura en la documentación de OpenCEM.
+
+
+### Valores observados de `settings.battype`
+
+Al agrupar los valores no nulos por inversor, el único código observado fue:
+
+| Inversor | Código observado | Registros |
+|---:|---:|---:|
+| 1 | 4 | 47.630 |
+| 2 | 4 | 46.253 |
+
+En total se observaron 93.883 registros no nulos, todos con el valor `4`. El significado técnico de ese código no se interpreta sin una correspondencia explícita en la documentación oficial. El atributo conserva sus valores originales y se mantiene anulable, dado el alto porcentaje de SQL NULL.
