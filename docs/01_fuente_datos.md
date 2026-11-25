@@ -510,3 +510,24 @@ La combinación más frecuente del inversor 1 fue:
 | 15 | 5 | 100 | 10 | 100 | 1.270.877 |
 
 También aparece la combinación con `battfullsoc = 95` (5.082 registros), además de combinaciones parciales con valores SQL NULL. Estos resultados son observaciones de los valores almacenados; no se asigna significado adicional a los códigos sin verificar la documentación oficial. Para comparar ambos inversores se requiere una consulta sin límite global o con resumen separado por inversor.
+
+
+### Valores individuales de parámetros de estado de batería en `settings`
+
+La consulta por campo e inversor mostró los siguientes valores no nulos:
+
+| Columna | Inversor | Valor | Registros |
+|---|---:|---:|---:|
+| `batsoclowalarm` | 1 | 15 | 1.278.695 |
+| `batsoclowalarm` | 2 | 15 | 947.753 |
+| `batstopsoc` | 1 | 5 | 1.278.573 |
+| `batstopsoc` | 2 | 5 | 947.609 |
+| `battfullsoc` | 1 | 95 | 5.224 |
+| `battfullsoc` | 1 | 100 | 1.273.124 |
+| `battfullsoc` | 2 | 100 | 947.572 |
+| `inv2linesoc` | 1 | 10 | 1.278.366 |
+| `inv2linesoc` | 2 | 10 | 947.625 |
+| `lineback2invsoc` | 1 | 100 | 1.278.474 |
+| `lineback2invsoc` | 2 | 100 | 947.545 |
+
+Los cuatro parámetros `batsoclowalarm`, `batstopsoc`, `inv2linesoc` y `lineback2invsoc` presentan un único valor no nulo por inversor en los resultados. `battfullsoc` presenta dos valores en el inversor 1 (95 y 100), mientras que en el inversor 2 solo se observó 100. Los conteos no nulos no sustituyen el análisis de los registros SQL NULL. Se mantienen los valores originales sin inferir significado adicional más allá de los nombres de campo.
