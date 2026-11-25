@@ -213,3 +213,28 @@ Se evaluó si los nulos de `battsoc`, `battvolt`, `battcurr`, `pv1power`, `pv1vo
 En el inversor 2, 55.657 de los 65.606 registros con al menos un nulo tienen las seis variables nulas simultáneamente. En el inversor 1 solo se observó un registro con esa condición. El patrón indica que gran parte de los valores ausentes del inversor 2 se presentan conjuntamente, lo que podría relacionarse con condiciones de adquisición o disponibilidad de mediciones. La causa no se puede establecer únicamente con esta consulta y queda pendiente de investigación.
 
 Los registros se conservarán sin imputar automáticamente los valores ausentes.
+
+
+### Distribución diaria de registros con seis variables nulas
+
+Se agruparon por día los registros de `analog_measurements` en los que las seis variables `battsoc`, `battvolt`, `battcurr`, `pv1power`, `pv1volt` y `pv1curr` son nulas simultáneamente. Los 15 días con mayor cantidad reportada pertenecen al inversor 2 y se concentran entre el 13 de mayo y el 2 de junio de 2026.
+
+| Fecha | Registros con seis variables nulas |
+|---|---:|
+| 2026-05-20 | 1.450 |
+| 2026-05-25 | 1.450 |
+| 2026-05-13 | 1.449 |
+| 2026-05-18 | 1.449 |
+| 2026-05-19 | 1.449 |
+| 2026-05-22 | 1.449 |
+| 2026-05-23 | 1.449 |
+| 2026-05-26 | 1.449 |
+| 2026-05-27 | 1.449 |
+| 2026-05-28 | 1.449 |
+| 2026-05-29 | 1.449 |
+| 2026-05-30 | 1.449 |
+| 2026-05-31 | 1.449 |
+| 2026-06-01 | 1.449 |
+| 2026-06-02 | 1.449 |
+
+La similitud de los conteos diarios sugiere un patrón recurrente de ausencia de mediciones en ese periodo. El resultado por sí solo no permite atribuir una causa física u operativa. Se requiere contrastar estos días con el total diario de lecturas y con las demás tablas antes de concluir que hubo interrupciones de adquisición.
