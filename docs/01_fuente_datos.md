@@ -531,3 +531,10 @@ La consulta por campo e inversor mostró los siguientes valores no nulos:
 | `lineback2invsoc` | 2 | 100 | 947.545 |
 
 Los cuatro parámetros `batsoclowalarm`, `batstopsoc`, `inv2linesoc` y `lineback2invsoc` presentan un único valor no nulo por inversor en los resultados. `battfullsoc` presenta dos valores en el inversor 1 (95 y 100), mientras que en el inversor 2 solo se observó 100. Los conteos no nulos no sustituyen el análisis de los registros SQL NULL. Se mantienen los valores originales sin inferir significado adicional más allá de los nombres de campo.
+
+
+### Combinaciones observadas de programación horaria en `settings`
+
+Se agruparon los indicadores de programación de carga/descarga y horarios de los dos primeros periodos. La consulta devolvió las 20 combinaciones más frecuentes con orden por inversor y límite global de 20 filas; por ello, el resultado compartido contiene únicamente combinaciones del inversor 1 y no permite concluir sobre el inversor 2.
+
+La combinación más frecuente del inversor 1 fue `ontimechargeen=0`, los horarios `chargestarttime1=0`, `chargeendtime1=0`, `chargestarttime2=0`, `chargeendtime2=0`, `ontimedischgen=0`, `dischgstarttime1=0` y `dischgendtime1=0`, con 1.274.249 registros. También se observan combinaciones con SQL NULL en uno o más campos. Los ceros se registran como valores almacenados; no se les asigna una interpretación de habilitación o de hora sin validar la codificación oficial.
