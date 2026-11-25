@@ -667,3 +667,16 @@ Se desglosaron algunos campos representativos por inversor:
 Los totales por inversor son 678.646 registros para el inversor 1 y 654.528 para el inversor 2. El campo `prdreserve` está completamente en SQL NULL para el inversor 2; en el inversor 1 solo 1.338 registros tienen valor no nulo. Los demás campos revisados presentan proporciones de NULL muy similares entre inversores.
 
 **Interpretación:** la ausencia de datos en los campos de identificación y versión afecta a ambos inversores de manera parecida. `cpubuidtime` y `customsn` son las excepciones con alta disponibilidad. Se mantienen los valores faltantes sin imputación; la diferencia de `prdreserve` se conserva como particularidad observada y no se interpreta semánticamente sin documentación.
+
+
+### Combinaciones de atributos de identificación y versiones en `specs`
+
+Se agruparon por inversor los campos `machcode`, `producttype`, `manufacturename`, `sourcesn`, las cuatro versiones de hardware, `protocolver`, `bmsver` y `libver`. La consulta devolvió las primeras 20 combinaciones globales; todas corresponden al inversor 1, por lo que no permite aún comparar los dos inversores.
+
+En los resultados visibles:
+- La combinación con los 12 campos agrupados en SQL NULL aparece 630.842 veces para el inversor 1.
+- La siguiente combinación más frecuente visible tiene valores en varios campos de identificación y versiones, y aparece 41.275 veces.
+- También aparecen combinaciones relacionadas con variaciones o faltantes puntuales en esos atributos.
+- Algunos valores de texto se muestran como arreglos numéricos serializados, por ejemplo en `manufacturename`, `sourcesn` y `libver`. Se conservan tal como están en SQLite hasta confirmar en la documentación oficial su codificación y transformación adecuada.
+
+**Interpretación y limitación:** `specs` contiene muchas repeticiones de combinaciones de atributos, lo que sugiere registros de especificaciones asociados a distintas marcas de tiempo, pero no basta para convertir esta tabla en una tabla estática de equipos ni para eliminar filas. El resultado está limitado por `LIMIT 20` sin partición por inversor; se necesita un ranking separado por inversor para conocer las combinaciones dominantes de ambos. Los valores codificados en arreglos no se decodifican por inferencia.
