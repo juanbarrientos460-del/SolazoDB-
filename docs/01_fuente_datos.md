@@ -154,3 +154,19 @@ Se realizó un LEFT JOIN entre `analog_measurements` y `status` utilizando simul
 El cruce permite observar que la primera lectura sí tiene varios campos de estado disponibles en la misma marca temporal; la segunda no presenta datos de estado útiles en el resultado; y la tercera solo presenta `startupstatus = 1`. Por tanto, la información de `status` es incompleta o variable para estos tres casos.
 
 Este resultado no permite concluir por sí solo si hubo desconexión, inactividad o un problema de captura. La ausencia de valores en el cruce exacto tampoco demuestra que no existan registros cercanos en el tiempo. Como siguiente validación se buscarán las filas de `status` temporalmente más cercanas a cada lectura, midiendo la diferencia en segundos. Se conservan los datos originales sin alteración.
+
+
+## Perfil de valores nulos en variables principales de analog_measurements
+
+Se ejecutó una consulta de conteo de valores nulos para seis variables de medición. Sobre un total de **2.989.759 registros**, se obtuvieron los siguientes resultados:
+
+| Variable | Valores nulos | Porcentaje sobre el total |
+|---|---:|---:|
+| `battsoc` | 57.931 | 1,94 % |
+| `battvolt` | 58.141 | 1,95 % |
+| `battcurr` | 58.217 | 1,95 % |
+| `pv1power` | 58.660 | 1,96 % |
+| `pv1volt` | 59.379 | 1,99 % |
+| `pv1curr` | 58.001 | 1,94 % |
+
+Los porcentajes se calcularon respecto al total de filas de `analog_measurements` y se redondearon a dos decimales. Se confirma la presencia de valores faltantes en las seis variables revisadas. Este hallazgo no demuestra por sí solo que los registros sean inválidos: antes de definir reglas de limpieza o restricciones `NOT NULL`, se debe revisar la distribución de nulos por inversor y su coincidencia entre variables. No se reemplazan ni eliminan valores en esta etapa.
