@@ -403,3 +403,17 @@ Consulta de seis parámetros sobre los 2.284.775 registros de la tabla:
 La tabla contiene dos inversores. Los seis parámetros presentan una proporción de valores ausentes muy diferente: `outvoltset`, `outfreqset`, `maxchgcurrset`, `cvvolt` y `floatvolt` tienen aproximadamente entre 2,55 % y 2,57 % de valores SQL NULL; `battype` presenta aproximadamente 95,90 %.
 
 Este patrón se registra como hallazgo de calidad y disponibilidad, no como prueba de corrupción. Se conservarán los valores ausentes como SQL `NULL`; antes de definir restricciones de obligatoriedad para estos atributos se debe revisar su distribución por inversor y la definición del diccionario oficial.
+
+
+### Distribución de valores nulos de `settings` por inversor
+
+Se desglosaron los valores ausentes de cuatro parámetros por inversor:
+
+| Inversor | Registros | `battype` NULL | `outvoltset` NULL | `cvvolt` NULL | `floatvolt` NULL |
+|---:|---:|---:|---:|---:|---:|
+| 1 | 1.280.052 | 1.232.422 | 1.296 | 1.424 | 1.570 |
+| 2 | 1.004.723 | 958.470 | 57.021 | 57.080 | 57.139 |
+
+El atributo `battype` presenta una proporción muy alta de valores SQL NULL en ambos inversores (aproximadamente 96,3 % en el inversor 1 y 95,4 % en el inversor 2). En cambio, los parámetros `outvoltset`, `cvvolt` y `floatvolt` tienen pocos nulos en el inversor 1 (alrededor de 0,10–0,12 %) y muchos más en el inversor 2 (alrededor de 5,7 %).
+
+La diferencia entre inversores se conserva como una observación descriptiva de disponibilidad de datos. No se infiere su causa. Se recomienda mantener estos campos anulables en el modelo hasta verificar sus definiciones y reglas de captura en la documentación de OpenCEM.
