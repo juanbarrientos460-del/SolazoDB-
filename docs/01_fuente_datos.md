@@ -680,3 +680,16 @@ En los resultados visibles:
 - Algunos valores de texto se muestran como arreglos numéricos serializados, por ejemplo en `manufacturename`, `sourcesn` y `libver`. Se conservan tal como están en SQLite hasta confirmar en la documentación oficial su codificación y transformación adecuada.
 
 **Interpretación y limitación:** `specs` contiene muchas repeticiones de combinaciones de atributos, lo que sugiere registros de especificaciones asociados a distintas marcas de tiempo, pero no basta para convertir esta tabla en una tabla estática de equipos ni para eliminar filas. El resultado está limitado por `LIMIT 20` sin partición por inversor; se necesita un ranking separado por inversor para conocer las combinaciones dominantes de ambos. Los valores codificados en arreglos no se decodifican por inferencia.
+
+
+### Comparación de las combinaciones de especificaciones por inversor
+
+Se obtuvo un ranking independiente de las diez combinaciones más frecuentes de los doce atributos de identificación y versiones de `specs`.
+
+Hallazgos principales:
+- **Inversor 1:** la combinación en la que los doce atributos están en SQL NULL aparece 630.842 veces. La siguiente combinación más frecuente aparece 41.275 veces.
+- **Inversor 2:** la combinación en la que los doce atributos están en SQL NULL aparece 608.064 veces. La siguiente combinación más frecuente aparece 44.182 veces.
+- En las combinaciones más frecuentes con datos, los campos de identificación y versiones muestran valores recurrentes; también aparecen variantes con uno o varios atributos SQL NULL.
+- Los campos `manufacturename`, `sourcesn` y `libver` contienen representaciones de arreglos numéricos. No se decodifican todavía ni se interpretan como texto sin confirmar la codificación en la documentación oficial.
+
+**Interpretación:** ambos inversores presentan un volumen alto de registros donde los doce atributos agrupados están ausentes, y un conjunto menor de combinaciones recurrentes con datos. Esto respalda que la tabla contiene snapshots repetidos a lo largo del tiempo, pero no autoriza a eliminar registros ni a transformar `specs` en una tabla estática. Se debe conservar la granularidad temporal y los SQL NULL originales hasta definir el modelo lógico.
