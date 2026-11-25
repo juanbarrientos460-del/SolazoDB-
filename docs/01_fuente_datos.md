@@ -614,3 +614,10 @@ La consulta agrupada por `inverter` obtuvo:
 | **Total** | **1.333.174** | | |
 
 La tabla contiene 1.333.174 registros: 678.646 del inversor 1 y 654.528 del inversor 2. Los valores de `read_ts` están expresados en segundos Unix según la estructura de la fuente. Los dos inversores tienen intervalos temporales de inicio cercanos y finales también cercanos. Esta consulta no determina todavía la unicidad de `(inverter, read_ts)` ni la periodicidad de captura.
+
+
+### Unicidad candidata de `specs`
+
+Se ejecutó una agrupación por `(inverter, read_ts)` con filtro `HAVING COUNT(*) > 1`. La consulta no devolvió filas, por lo que no se encontraron duplicados de esa combinación en los 1.333.174 registros revisados.
+
+**Conclusión provisional:** `(inverter, read_ts)` es candidata a clave primaria compuesta para `specs`, sujeta a completar las comprobaciones de integridad y confirmar que representa la granularidad de cada registro. No se declara todavía como clave definitiva.
