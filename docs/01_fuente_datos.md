@@ -497,3 +497,16 @@ La consulta de valores distintos confirmó un solo código no nulo para cada cam
 | `bmsset` | 1 | 2.226.209 |
 
 Los resultados describen los códigos almacenados, no su interpretación funcional. Los campos permanecen anulables en el modelo hasta validar sus definiciones y reglas de captura con la documentación de OpenCEM.
+
+
+### Combinaciones observadas de parámetros de estado de batería en `settings`
+
+Se agruparon `batsoclowalarm`, `batstopsoc`, `battfullsoc`, `inv2linesoc` y `lineback2invsoc` por inversor. En las primeras 20 combinaciones devueltas (ordenadas por inversor y frecuencia), los resultados corresponden únicamente al inversor 1 debido al límite `LIMIT 20`.
+
+La combinación más frecuente del inversor 1 fue:
+
+| batsoclowalarm | batstopsoc | battfullsoc | inv2linesoc | lineback2invsoc | Registros |
+|---:|---:|---:|---:|---:|---:|
+| 15 | 5 | 100 | 10 | 100 | 1.270.877 |
+
+También aparece la combinación con `battfullsoc = 95` (5.082 registros), además de combinaciones parciales con valores SQL NULL. Estos resultados son observaciones de los valores almacenados; no se asigna significado adicional a los códigos sin verificar la documentación oficial. Para comparar ambos inversores se requiere una consulta sin límite global o con resumen separado por inversor.
