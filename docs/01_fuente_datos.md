@@ -647,3 +647,23 @@ Se contabilizaron valores SQL NULL sobre los 1.333.174 registros de `specs`:
 Los campos de identificación y versión del equipo (desde `machcode` hasta `libver`) tienen alrededor de 1,24 millones de NULL cada uno, mientras que `cpubuidtime` y `customsn` presentan muchos menos. `prdreserve` está ausente en casi todos los registros. Los conteos son independientes por columna; no indican que sean las mismas filas con valores faltantes.
 
 **Tratamiento:** se conservan los SQL NULL como faltantes y no se sustituyen por ceros ni por cadenas vacías. La causa y el significado de la alta proporción de NULL deben contrastarse con el diccionario oficial y con la distribución por inversor antes de definir restricciones en PostgreSQL.
+
+
+### Distribución de valores SQL NULL en `specs` por inversor
+
+Se desglosaron algunos campos representativos por inversor:
+
+| Columna | Inversor 1: NULL | Inversor 2: NULL |
+|---|---:|---:|
+| `machcode` | 630.922 | 608.184 |
+| `manufacturename` | 631.011 | 608.464 |
+| `sourcesn` | 631.507 | 609.026 |
+| `hwver_m1` | 630.874 | 608.174 |
+| `protocolver` | 630.910 | 608.208 |
+| `cpubuidtime` | 3.587 | 3.143 |
+| `customsn` | 3.333 | 3.079 |
+| `prdreserve` | 677.308 | 654.528 |
+
+Los totales por inversor son 678.646 registros para el inversor 1 y 654.528 para el inversor 2. El campo `prdreserve` está completamente en SQL NULL para el inversor 2; en el inversor 1 solo 1.338 registros tienen valor no nulo. Los demás campos revisados presentan proporciones de NULL muy similares entre inversores.
+
+**Interpretación:** la ausencia de datos en los campos de identificación y versión afecta a ambos inversores de manera parecida. `cpubuidtime` y `customsn` son las excepciones con alta disponibilidad. Se mantienen los valores faltantes sin imputación; la diferencia de `prdreserve` se conserva como particularidad observada y no se interpreta semánticamente sin documentación.
