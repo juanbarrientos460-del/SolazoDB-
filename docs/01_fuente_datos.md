@@ -693,3 +693,23 @@ Hallazgos principales:
 - Los campos `manufacturename`, `sourcesn` y `libver` contienen representaciones de arreglos numéricos. No se decodifican todavía ni se interpretan como texto sin confirmar la codificación en la documentación oficial.
 
 **Interpretación:** ambos inversores presentan un volumen alto de registros donde los doce atributos agrupados están ausentes, y un conjunto menor de combinaciones recurrentes con datos. Esto respalda que la tabla contiene snapshots repetidos a lo largo del tiempo, pero no autoriza a eliminar registros ni a transformar `specs` en una tabla estática. Se debe conservar la granularidad temporal y los SQL NULL originales hasta definir el modelo lógico.
+
+
+### Cantidad de valores distintos de identificación y versiones en `specs`
+
+Se calculó `COUNT(DISTINCT ...)` por inversor para ocho atributos. SQLite no cuenta los SQL NULL dentro de `COUNT(DISTINCT)`.
+
+| Atributo | Inversor 1: distintos | Inversor 2: distintos |
+|---|---:|---:|
+| `machcode` | 2 | 1 |
+| `producttype` | 1 | 1 |
+| `manufacturename` | 2 | 1 |
+| `sourcesn` | 4 | 1 |
+| `hwver_m1` | 1 | 1 |
+| `protocolver` | 1 | 1 |
+| `bmsver` | 1 | 1 |
+| `libver` | 3 | 1 |
+
+En el inversor 1, `machcode`, `manufacturename`, `sourcesn` y `libver` presentan más de un valor distinto no nulo. En el inversor 2, cada uno de los ocho atributos tiene un solo valor distinto no nulo. Los demás atributos tienen un único valor distinto en ambos inversores.
+
+**Interpretación:** estos conteos indican variación observada, pero no identifican qué valores concretos cambiaron ni si los cambios corresponden a una actualización real, diferencias de codificación o datos incompletos. Se requiere consultar los valores distintos concretos y, cuando sea necesario, sus frecuencias y marcas de tiempo. No se asigna significado a códigos o arreglos sin el diccionario oficial.
