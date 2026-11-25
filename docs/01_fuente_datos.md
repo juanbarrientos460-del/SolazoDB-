@@ -199,3 +199,17 @@ Se evaluaron los valores nulos de seis variables relevantes de batería y genera
 Los resultados muestran una concentración marcada de nulos en el inversor 2. En las seis variables, los porcentajes de nulos por inversor son aproximadamente 0,05–0,09 % para el inversor 1 y 4,14–4,20 % para el inversor 2. Esta diferencia es un hallazgo de perfilamiento que requiere investigación; por sí sola no demuestra una falla física ni permite determinar la causa de los valores ausentes.
 
 Los valores nulos se conservarán como ausentes durante la preparación y migración. No se sustituirán automáticamente por cero, porque cero puede ser una medición válida y no equivale a un dato desconocido.
+
+
+### Coincidencia de valores nulos entre seis variables
+
+Se evaluó si los nulos de `battsoc`, `battvolt`, `battcurr`, `pv1power`, `pv1volt` y `pv1curr` aparecen simultáneamente en una misma fila de `analog_measurements`.
+
+| Inversor | Total de registros | Seis variables nulas simultáneamente | Registros con al menos un nulo |
+|---|---:|---:|---:|
+| 1 | 1.610.276 | 1 | 5.289 |
+| 2 | 1.379.483 | 55.657 | 65.606 |
+
+En el inversor 2, 55.657 de los 65.606 registros con al menos un nulo tienen las seis variables nulas simultáneamente. En el inversor 1 solo se observó un registro con esa condición. El patrón indica que gran parte de los valores ausentes del inversor 2 se presentan conjuntamente, lo que podría relacionarse con condiciones de adquisición o disponibilidad de mediciones. La causa no se puede establecer únicamente con esta consulta y queda pendiente de investigación.
+
+Los registros se conservarán sin imputar automáticamente los valores ausentes.
