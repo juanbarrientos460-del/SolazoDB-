@@ -538,3 +538,19 @@ Los cuatro parámetros `batsoclowalarm`, `batstopsoc`, `inv2linesoc` y `lineback
 Se agruparon los indicadores de programación de carga/descarga y horarios de los dos primeros periodos. La consulta devolvió las 20 combinaciones más frecuentes con orden por inversor y límite global de 20 filas; por ello, el resultado compartido contiene únicamente combinaciones del inversor 1 y no permite concluir sobre el inversor 2.
 
 La combinación más frecuente del inversor 1 fue `ontimechargeen=0`, los horarios `chargestarttime1=0`, `chargeendtime1=0`, `chargestarttime2=0`, `chargeendtime2=0`, `ontimedischgen=0`, `dischgstarttime1=0` y `dischgendtime1=0`, con 1.274.249 registros. También se observan combinaciones con SQL NULL en uno o más campos. Los ceros se registran como valores almacenados; no se les asigna una interpretación de habilitación o de hora sin validar la codificación oficial.
+
+
+### Validación de parámetros de programación en `settings` (periodo 1)
+
+Se revisaron los valores no nulos de seis columnas relacionadas con la programación de carga y descarga, agrupados por inversor. En todos los registros no nulos observados, el único valor encontrado fue `0`:
+
+| Columna | Inversor 1 (valor 0) | Inversor 2 (valor 0) |
+|---|---:|---:|
+| `ontimechargeen` | 1.278.382 | 947.672 |
+| `chargestarttime1` | 1.278.540 | 947.660 |
+| `chargeendtime1` | 1.278.428 | 947.121 |
+| `ontimedischgen` | 1.278.510 | 947.563 |
+| `dischgstarttime1` | 1.278.418 | 947.918 |
+| `dischgendtime1` | 1.278.453 | 947.738 |
+
+**Interpretación y tratamiento:** en estas seis columnas, los valores no nulos observados son constantes e iguales a cero para ambos inversores. Esto describe el contenido del conjunto de datos, pero no permite concluir por sí solo que la programación esté desactivada ni que las horas representen una hora específica. Se conserva el valor original y la nulabilidad; no se eliminan columnas ni se asigna significado funcional a `0` sin una definición oficial del fabricante o del diccionario de OpenCEM. Esta validación cubre únicamente las seis columnas listadas y no los demás periodos de programación.
