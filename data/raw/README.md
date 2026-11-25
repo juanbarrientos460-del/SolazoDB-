@@ -41,3 +41,15 @@ Se cruzaron las tres lecturas con `battvolt = 0` con la tabla `status` por `inve
 En la tabla original `analog_measurements` se identificaron valores nulos en seis variables: `battsoc` (57.931), `battvolt` (58.141), `battcurr` (58.217), `pv1power` (58.660), `pv1volt` (59.379) y `pv1curr` (58.001), sobre 2.989.759 registros.
 
 La distribución por inversor evidencia que los nulos se concentran en el inversor 2: entre 57.122 y 57.951 nulos por variable, frente a entre 771 y 1.428 en el inversor 1. Es un hallazgo de calidad pendiente de explicación, no una prueba de avería. No reemplazar los nulos por cero sin una regla de negocio justificada.
+
+
+## Coincidencia de nulos entre variables
+
+Una consulta conjunta de seis variables (`battsoc`, `battvolt`, `battcurr`, `pv1power`, `pv1volt`, `pv1curr`) encontró:
+
+| Inversor | Total de registros | Las seis variables nulas | Al menos una variable nula |
+|---|---:|---:|---:|
+| 1 | 1.610.276 | 1 | 5.289 |
+| 2 | 1.379.483 | 55.657 | 65.606 |
+
+La concentración de nulos simultáneos en el inversor 2 es un patrón relevante para el análisis de calidad. No se conoce aún su causa; no se deben reemplazar esos valores por cero de forma automática.
