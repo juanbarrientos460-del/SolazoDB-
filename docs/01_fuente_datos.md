@@ -465,3 +465,10 @@ Se agruparon las combinaciones no nulas de los parámetros de voltaje de carga y
 | 2 | 946.601 | 1.042 | 983 |
 
 Todos los valores no nulos observados de ambos parámetros son 57.6 en los dos inversores. Se identifican registros parciales donde uno de los dos campos es SQL NULL. Se preservan los valores ausentes y no se imputan.
+
+
+### Estructura SQLite de `settings`
+
+La inspección con `PRAGMA table_info(settings)` confirmó 176 columnas (posiciones 0 a 175). Los únicos campos declarados como NOT NULL en SQLite son `read_ts` (REAL) e `inverter` (INTEGER); los otros 174 campos permiten SQL NULL en la estructura de origen. Esta observación describe el esquema SQLite y no determina por sí sola las restricciones definitivas de PostgreSQL.
+
+Los campos incluyen parámetros de prioridad y modo de salida, límites y protecciones de red, parámetros de batería y carga, programación horaria, reservas codificadas como arreglos JSON y curvas/funciones de control. Las descripciones y unidades de cada campo se deben contrastar con el diccionario oficial de OpenCEM antes de cerrar el diccionario de datos de SolarDB.
