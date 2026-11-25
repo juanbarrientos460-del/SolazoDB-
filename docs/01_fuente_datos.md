@@ -345,3 +345,17 @@ El conteo por inversor en SQLite arrojó 1.280.052 registros para el inversor 1 
 La consulta de duplicados agrupando por `(inverter, read_ts)` y filtrando grupos con más de una fila no devolvió resultados. Por tanto, esa combinación es una **clave primaria compuesta candidata** para `settings`; su adopción definitiva queda sujeta a confirmar la semántica y las relaciones con las demás tablas.
 
 **Observación de modelado:** los campos `reserve` y `battsetreserve` son de tipo SQLite `TEXT`; su contenido y formato deben inspeccionarse antes de decidir su representación en PostgreSQL. No se deben asumir unidades o significados de los parámetros únicamente a partir de sus nombres.
+
+
+### Validación de los campos `reserve` y `battsetreserve` en `settings`
+
+Se ejecutó una validación con las funciones `json_valid` y comprobación de `IS NULL` en SQLite. Los resultados fueron:
+
+| Campo | Total de filas | SQL NULL | JSON válido no nulo | JSON no válido |
+|---|---:|---:|---:|---:|
+| `reserve` | 2.284.775 | 6.297 | 2.278.478 | 0 |
+| `battsetreserve` | 2.284.775 | 4.819 | 2.279.956 | 0 |
+
+Todos los valores no nulos de ambos campos son JSON válido. En muestras se observaron arreglos de 15 posiciones en `reserve` y de 8 posiciones en `battsetreserve`, además de arreglos como `[null]`. Estos arreglos JSON no deben confundirse con `SQL NULL`: el primero es un valor JSON presente y el segundo representa ausencia SQL.
+
+**Implicación para PostgreSQL:** ambos campos son candidatos para conservarse como `JSONB`, preservando los valores JSON y los SQL NULL. Antes de interpretar o normalizar sus posiciones, se debe consultar la descripción y semántica de ambos campos en el diccionario oficial de columnas.
