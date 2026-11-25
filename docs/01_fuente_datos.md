@@ -575,3 +575,29 @@ Resultados principales:
 - En ambos inversores, las siguientes combinaciones más frecuentes contienen ceros junto con una o más columnas SQL NULL.
 
 **Interpretación:** los dos inversores muestran como patrón dominante la combinación de ceros en los ocho campos. Sin embargo, el patrón de ocho valores SQL NULL es considerablemente más frecuente en el inversor 2. Esto se registra como una diferencia descriptiva del conjunto de datos; no se interpreta como programación desactivada, fallo o ausencia de funcionalidad sin documentación semántica que lo confirme. Se deben preservar los ceros y los SQL NULL por separado.
+
+
+## Estructura de la tabla `specs`
+
+La inspección con `PRAGMA table_info(specs)` identificó 16 columnas:
+
+| Posición | Columna | Tipo SQLite | NOT NULL |
+|---:|---|---|---|
+| 0 | `read_ts` | REAL | Sí |
+| 1 | `inverter` | INTEGER | Sí |
+| 2 | `machcode` | INTEGER | No |
+| 3 | `producttype` | INTEGER | No |
+| 4 | `manufacturename` | TEXT | No |
+| 5 | `sourcesn` | TEXT | No |
+| 6 | `hwver_m1` | INTEGER | No |
+| 7 | `hwver_m2` | INTEGER | No |
+| 8 | `hwver_s1` | INTEGER | No |
+| 9 | `hwver_s2` | INTEGER | No |
+| 10 | `protocolver` | INTEGER | No |
+| 11 | `bmsver` | INTEGER | No |
+| 12 | `libver` | TEXT | No |
+| 13 | `cpubuidtime` | TEXT | No |
+| 14 | `customsn` | TEXT | No |
+| 15 | `prdreserve` | TEXT | No |
+
+Solo `read_ts` e `inverter` están declaradas como NOT NULL en SQLite. Las demás columnas permiten SQL NULL. Por sus nombres, la tabla parece reunir identificación del equipo, fabricante, números de serie y versiones de hardware/software; esta clasificación es provisional y las descripciones definitivas deben contrastarse con el diccionario oficial de OpenCEM. Aún no se define la clave primaria ni se asignan restricciones de PostgreSQL.
