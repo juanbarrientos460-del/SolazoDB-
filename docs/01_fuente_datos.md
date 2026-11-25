@@ -601,3 +601,16 @@ La inspección con `PRAGMA table_info(specs)` identificó 16 columnas:
 | 15 | `prdreserve` | TEXT | No |
 
 Solo `read_ts` e `inverter` están declaradas como NOT NULL en SQLite. Las demás columnas permiten SQL NULL. Por sus nombres, la tabla parece reunir identificación del equipo, fabricante, números de serie y versiones de hardware/software; esta clasificación es provisional y las descripciones definitivas deben contrastarse con el diccionario oficial de OpenCEM. Aún no se define la clave primaria ni se asignan restricciones de PostgreSQL.
+
+
+### Distribución temporal de `specs` por inversor
+
+La consulta agrupada por `inverter` obtuvo:
+
+| Inversor | Registros | Primer `read_ts` | Último `read_ts` |
+|---:|---:|---:|---:|
+| 1 | 678.646 | 1752327095.265811 | 1770057555.51835 |
+| 2 | 654.528 | 1752472412.761199 | 1770057630.734813 |
+| **Total** | **1.333.174** | | |
+
+La tabla contiene 1.333.174 registros: 678.646 del inversor 1 y 654.528 del inversor 2. Los valores de `read_ts` están expresados en segundos Unix según la estructura de la fuente. Los dos inversores tienen intervalos temporales de inicio cercanos y finales también cercanos. Esta consulta no determina todavía la unicidad de `(inverter, read_ts)` ni la periodicidad de captura.
