@@ -563,3 +563,15 @@ Se agruparon las combinaciones de ocho columnas correspondientes a los horarios 
 En el inversor 1, la combinación más frecuente contiene cero en las ocho columnas y aparece 1.273.995 veces. También se observaron combinaciones con valores cero y algunas columnas SQL NULL; por ejemplo, una combinación con las ocho columnas SQL NULL aparece 932 veces. Las demás combinaciones devueltas presentan distintas posiciones con valores cero o SQL NULL.
 
 **Alcance e interpretación:** este resultado no permite concluir que el inversor 2 tenga el mismo patrón, porque el `LIMIT 20` global no mostró sus combinaciones. Tampoco se asigna significado funcional a los ceros ni a los NULL: se conservan como datos distintos. Se requiere una consulta con ranking separado por inversor para comparar ambos equipos de forma válida.
+
+
+### Comparación de periodos 2 y 3 de programación por inversor
+
+Se repitió el agrupamiento de las ocho columnas de horarios de carga y descarga de los periodos 2 y 3, aplicando `ROW_NUMBER()` particionado por `inverter` para obtener las diez combinaciones más frecuentes de cada inversor.
+
+Resultados principales:
+- **Inversor 1:** la combinación con los ocho valores en cero aparece 1.273.995 veces. La combinación con las ocho columnas SQL NULL aparece 932 veces.
+- **Inversor 2:** la combinación con los ocho valores en cero aparece 940.728 veces. La combinación con las ocho columnas SQL NULL aparece 56.091 veces.
+- En ambos inversores, las siguientes combinaciones más frecuentes contienen ceros junto con una o más columnas SQL NULL.
+
+**Interpretación:** los dos inversores muestran como patrón dominante la combinación de ceros en los ocho campos. Sin embargo, el patrón de ocho valores SQL NULL es considerablemente más frecuente en el inversor 2. Esto se registra como una diferencia descriptiva del conjunto de datos; no se interpreta como programación desactivada, fallo o ausencia de funcionalidad sin documentación semántica que lo confirme. Se deben preservar los ceros y los SQL NULL por separado.
