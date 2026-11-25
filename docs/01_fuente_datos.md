@@ -621,3 +621,29 @@ La tabla contiene 1.333.174 registros: 678.646 del inversor 1 y 654.528 del inve
 Se ejecutó una agrupación por `(inverter, read_ts)` con filtro `HAVING COUNT(*) > 1`. La consulta no devolvió filas, por lo que no se encontraron duplicados de esa combinación en los 1.333.174 registros revisados.
 
 **Conclusión provisional:** `(inverter, read_ts)` es candidata a clave primaria compuesta para `specs`, sujeta a completar las comprobaciones de integridad y confirmar que representa la granularidad de cada registro. No se declara todavía como clave definitiva.
+
+
+### Valores SQL NULL por columna en `specs`
+
+Se contabilizaron valores SQL NULL sobre los 1.333.174 registros de `specs`:
+
+| Columna | Valores NULL | Valores no NULL |
+|---|---:|---:|
+| `machcode` | 1.239.106 | 94.068 |
+| `producttype` | 1.239.104 | 94.070 |
+| `manufacturename` | 1.239.475 | 93.699 |
+| `sourcesn` | 1.240.533 | 92.641 |
+| `hwver_m1` | 1.239.048 | 94.126 |
+| `hwver_m2` | 1.239.546 | 93.628 |
+| `hwver_s1` | 1.239.144 | 94.030 |
+| `hwver_s2` | 1.239.379 | 93.795 |
+| `protocolver` | 1.239.118 | 94.056 |
+| `bmsver` | 1.239.206 | 93.968 |
+| `libver` | 1.239.199 | 93.975 |
+| `cpubuidtime` | 6.730 | 1.326.444 |
+| `customsn` | 6.412 | 1.326.762 |
+| `prdreserve` | 1.331.836 | 1.338 |
+
+Los campos de identificación y versión del equipo (desde `machcode` hasta `libver`) tienen alrededor de 1,24 millones de NULL cada uno, mientras que `cpubuidtime` y `customsn` presentan muchos menos. `prdreserve` está ausente en casi todos los registros. Los conteos son independientes por columna; no indican que sean las mismas filas con valores faltantes.
+
+**Tratamiento:** se conservan los SQL NULL como faltantes y no se sustituyen por ceros ni por cadenas vacías. La causa y el significado de la alta proporción de NULL deben contrastarse con el diccionario oficial y con la distribución por inversor antes de definir restricciones en PostgreSQL.
