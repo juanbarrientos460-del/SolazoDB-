@@ -385,3 +385,21 @@ Se verificaron las columnas `reserve` y `battsetreserve`:
 | `battsetreserve` | 2.284.775 | 4.819 | 2.279.956 | 0 |
 
 Todos los valores no nulos de ambas columnas son JSON válido. Se mantiene la distinción entre SQL `NULL` (dato ausente/no disponible) y arreglos JSON como `[null]`; no se deben reemplazar automáticamente por cero ni interpretar las posiciones sin documentación específica del componente. Para el modelo PostgreSQL se propone conservar ambos arreglos como `JSONB`, sujeto a la definición final del esquema.
+
+
+### Análisis de valores nulos en parámetros de `settings`
+
+Consulta de seis parámetros sobre los 2.284.775 registros de la tabla:
+
+| Columna | Valores SQL NULL |
+|---|---:|
+| `outvoltset` | 58.317 |
+| `outfreqset` | 58.409 |
+| `maxchgcurrset` | 58.290 |
+| `battype` | 2.190.892 |
+| `cvvolt` | 58.504 |
+| `floatvolt` | 58.709 |
+
+La tabla contiene dos inversores. Los seis parámetros presentan una proporción de valores ausentes muy diferente: `outvoltset`, `outfreqset`, `maxchgcurrset`, `cvvolt` y `floatvolt` tienen aproximadamente entre 2,55 % y 2,57 % de valores SQL NULL; `battype` presenta aproximadamente 95,90 %.
+
+Este patrón se registra como hallazgo de calidad y disponibilidad, no como prueba de corrupción. Se conservarán los valores ausentes como SQL `NULL`; antes de definir restricciones de obligatoriedad para estos atributos se debe revisar su distribución por inversor y la definición del diccionario oficial.
