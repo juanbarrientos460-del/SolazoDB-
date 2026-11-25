@@ -238,3 +238,74 @@ Se agruparon por día los registros de `analog_measurements` en los que las seis
 | 2026-06-02 | 1.449 |
 
 La similitud de los conteos diarios sugiere un patrón recurrente de ausencia de mediciones en ese periodo. El resultado por sí solo no permite atribuir una causa física u operativa. Se requiere contrastar estos días con el total diario de lecturas y con las demás tablas antes de concluir que hubo interrupciones de adquisición.
+
+
+## Análisis exploratorio de la tabla fault_history
+
+La tabla `fault_history` contiene **2.129.517 registros**. En la inspección de su estructura se identificaron 32 columnas de historial (`faulthistoryrecord00` a `faulthistoryrecord31`) y 32 columnas de tiempo asociadas (`faulthistoryrecord00_time` a `faulthistoryrecord31_time`).
+
+### Identificación de registros y valores
+
+- La consulta de nulos en `inverter` y `read_ts` devolvió cero valores nulos.
+- La consulta de duplicados agrupando por `(inverter, read_ts)` no encontró grupos duplicados.
+- Por tanto, `(inverter, read_ts)` es una **clave candidata** para la tabla de origen. Su adopción como clave primaria en PostgreSQL queda sujeta a validación durante la migración.
+- Una consulta inicial de cinco filas mostró que algunos registros tienen los campos de historial vacíos; por ello, una muestra pequeña no representa necesariamente el contenido de toda la tabla.
+
+### Estructura JSON observada
+
+Los campos `faulthistoryrecord00` y `faulthistoryrecord01` se inspeccionaron mediante funciones JSON de SQLite:
+
+- `faulthistoryrecord00` tiene tipo `text`, es reconocido como JSON válido y en la muestra consultada presentó arreglos de 16 elementos y arreglos de un elemento.
+- Para `faulthistoryrecord00`, el perfil de longitudes dio 56.909 arreglos de un elemento y 2.066.726 arreglos de 16 elementos, sobre 2.123.635 valores no nulos.
+- Una consulta adicional confirmó que los 56.909 arreglos de un elemento de `faulthistoryrecord00` son exactamente `[null]`; los 56.909 tienen su campo `faulthistoryrecord00_time` nulo.
+- Para `faulthistoryrecord01`, el perfil de longitudes dio 56.855 arreglos de un elemento y 2.067.589 arreglos de 16 elementos, sobre 2.124.444 valores no nulos. No se verificó todavía el contenido exacto de todos los arreglos de un elemento de este campo.
+- En los ejemplos consultados, los arreglos de 16 elementos contienen valores numéricos y su campo de tiempo asociado contiene una marca de tiempo REAL. Algunos registros muestran arreglos repetidos en distintas filas con diferentes valores de `read_ts`; este comportamiento requiere interpretación con la documentación técnica.
+
+Los 16 elementos no se interpretan todavía como 16 fallos independientes. No se conoce el significado de cada posición, por lo que no se asignan nombres ni se descompone el arreglo en columnas inventadas. Se debe conservar el contenido original durante la migración hasta confirmar su semántica.
+
+### Perfil de valores nulos en los campos de tiempo
+
+Se consultaron los valores nulos de los 32 campos de tiempo. El total de filas de la tabla fue 2.129.517. Los resultados obtenidos para cada grupo fueron:
+
+| Campo de tiempo | Valores nulos |
+|---|---:|
+| `faulthistoryrecord00_time` | 84.395 |
+| `faulthistoryrecord01_time` | 83.489 |
+| `faulthistoryrecord02_time` | 83.827 |
+| `faulthistoryrecord03_time` | 2.057.367 |
+| `faulthistoryrecord04_time` | 2.057.377 |
+| `faulthistoryrecord05_time` | 2.057.563 |
+| `faulthistoryrecord06_time` | 2.057.574 |
+| `faulthistoryrecord07_time` | 2.057.538 |
+| `faulthistoryrecord08_time` | 2.058.008 |
+| `faulthistoryrecord09_time` | 2.057.977 |
+| `faulthistoryrecord10_time` | 2.057.943 |
+| `faulthistoryrecord11_time` | 2.057.959 |
+| `faulthistoryrecord12_time` | 2.057.960 |
+| `faulthistoryrecord13_time` | 2.057.935 |
+| `faulthistoryrecord14_time` | 2.057.950 |
+| `faulthistoryrecord15_time` | 2.058.183 |
+| `faulthistoryrecord16_time` | 2.058.135 |
+| `faulthistoryrecord17_time` | 2.058.148 |
+| `faulthistoryrecord18_time` | 2.058.012 |
+| `faulthistoryrecord19_time` | 2.058.051 |
+| `faulthistoryrecord20_time` | 2.058.064 |
+| `faulthistoryrecord21_time` | 2.058.049 |
+| `faulthistoryrecord22_time` | 2.057.619 |
+| `faulthistoryrecord23_time` | 2.057.623 |
+| `faulthistoryrecord24_time` | 2.057.589 |
+| `faulthistoryrecord25_time` | 2.057.658 |
+| `faulthistoryrecord26_time` | 2.057.674 |
+| `faulthistoryrecord27_time` | 2.057.668 |
+| `faulthistoryrecord28_time` | 2.062.295 |
+| `faulthistoryrecord29_time` | 2.059.580 |
+| `faulthistoryrecord30_time` | 2.057.681 |
+| `faulthistoryrecord31_time` | 2.057.653 |
+
+Los tres primeros campos de tiempo tienen aproximadamente entre 3,9 % y 4,0 % de valores nulos. Los campos 03–31 tienen aproximadamente entre 96,6 % y 96,9 % de valores nulos. La distribución es desigual y debe considerarse al diseñar la transformación; los valores ausentes se conservarán como ausentes, sin sustituirlos automáticamente por cero ni eliminar registros.
+
+### Decisión provisional de modelado
+
+La estructura de origen presenta grupos de columnas repetidas y arreglos JSON, por lo que debe evaluarse una transformación que permita consultar los registros de historial de forma relacional. Sin embargo, todavía no se define una tabla hija con una fila por elemento: primero se debe confirmar en la documentación de OpenCEM qué representa cada posición del arreglo, cómo se relacionan los 32 campos entre sí y qué significa cada marca de tiempo. La migración debe preservar los valores originales y permitir rastrear cada dato hasta su fila de origen.
+
+Estas consultas se ejecutaron en DBeaver sobre la conexión SQLite del archivo original. Los resultados son parte del perfilamiento exploratorio y no constituyen por sí solos una interpretación funcional de los códigos.
