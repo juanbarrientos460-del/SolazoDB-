@@ -34,3 +34,10 @@ En la revisión de las filas de `analog_measurements` con `battvolt = 0` se iden
 ### Cruce exploratorio con `status`
 
 Se cruzaron las tres lecturas con `battvolt = 0` con la tabla `status` por `inverter` y `read_ts`. El registro del 2026-05-12 10:16:17 presentó varios campos de estado; el del 2026-05-15 04:10:28 no presentó valores de estado útiles en la coincidencia exacta; y el del 2026-06-19 04:35:37 solo presentó `startupstatus = 1`. El resultado indica disponibilidad desigual de datos de estado, pero no prueba una causa física ni un error. Se documenta una siguiente revisión de registros cercanos en el tiempo.
+
+
+## Perfilamiento de valores nulos
+
+En la tabla original `analog_measurements` se identificaron valores nulos en seis variables: `battsoc` (57.931), `battvolt` (58.141), `battcurr` (58.217), `pv1power` (58.660), `pv1volt` (59.379) y `pv1curr` (58.001), sobre 2.989.759 registros.
+
+La distribución por inversor evidencia que los nulos se concentran en el inversor 2: entre 57.122 y 57.951 nulos por variable, frente a entre 771 y 1.428 en el inversor 1. Es un hallazgo de calidad pendiente de explicación, no una prueba de avería. No reemplazar los nulos por cero sin una regla de negocio justificada.
