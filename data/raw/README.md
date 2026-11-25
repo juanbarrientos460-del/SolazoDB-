@@ -58,3 +58,14 @@ La concentración de nulos simultáneos en el inversor 2 es un patrón relevante
 ## Distribución diaria de registros con seis variables nulas
 
 Los 15 días con más registros donde `battsoc`, `battvolt`, `battcurr`, `pv1power`, `pv1volt` y `pv1curr` son nulas simultáneamente corresponden al inversor 2 y se concentran entre el 13 de mayo y el 2 de junio de 2026. Los conteos diarios se mantienen alrededor de 1.449 registros (con dos días en 1.450). Es un patrón temporal que requiere contraste con el volumen total de lecturas por día y con otras tablas; no confirma por sí mismo la causa de los datos ausentes.
+
+
+## Perfilamiento adicional de fault_history
+
+Se inspeccionó la tabla original `fault_history`, que contiene 2.129.517 registros. Se verificó que `inverter` y `read_ts` no tienen valores nulos y que no se encontraron duplicados al agrupar por ambos campos; por ello, la combinación es candidata a clave primaria, pendiente de validación en la migración.
+
+Los campos `faulthistoryrecord00` a `faulthistoryrecord31` contienen datos estructurados como texto JSON. En `faulthistoryrecord00` se encontraron 2.066.726 arreglos de 16 elementos y 56.909 arreglos de un elemento; estos últimos fueron comprobados como `[null]` y tienen el tiempo asociado nulo. En `faulthistoryrecord01` se encontraron 2.067.589 arreglos de 16 elementos y 56.855 arreglos de un elemento; el contenido exacto de estos últimos queda pendiente de comprobación.
+
+También se perfilaron los 32 campos de tiempo asociados. Los campos 00–02 presentan aproximadamente 3,9–4,0 % de nulos, mientras que los campos 03–31 presentan aproximadamente 96,6–96,9 % de nulos. Esta distribución desigual se debe conservar y documentar; no se imputarán valores ni se eliminarán registros por este motivo.
+
+Los arreglos de 16 posiciones no se interpretan todavía como 16 fallos independientes porque no se ha confirmado el significado de cada posición en la documentación técnica. Se conservará el contenido original hasta definir una transformación relacional semánticamente correcta. El detalle de conteos por campo está en `docs/01_fuente_datos.md`.
