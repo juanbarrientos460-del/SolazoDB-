@@ -309,3 +309,12 @@ Los tres primeros campos de tiempo tienen aproximadamente entre 3,9 % y 4,0 % de
 La estructura de origen presenta grupos de columnas repetidas y arreglos JSON, por lo que debe evaluarse una transformación que permita consultar los registros de historial de forma relacional. Sin embargo, todavía no se define una tabla hija con una fila por elemento: primero se debe confirmar en la documentación de OpenCEM qué representa cada posición del arreglo, cómo se relacionan los 32 campos entre sí y qué significa cada marca de tiempo. La migración debe preservar los valores originales y permitir rastrear cada dato hasta su fila de origen.
 
 Estas consultas se ejecutaron en DBeaver sobre la conexión SQLite del archivo original. Los resultados son parte del perfilamiento exploratorio y no constituyen por sí solos una interpretación funcional de los códigos.
+
+
+### Confirmación documental de los arreglos de `fault_history`
+
+La ficha del diccionario de columnas para `fault_history.faulthistoryrecord00` confirma que el campo conserva un payload de múltiples registros en un arreglo JSON codificado como texto UTF-8. Su descripción indica que la semántica de los elementos depende del componente (`component-defined`), por lo que no se deben asignar nombres o significados a las 16 posiciones sin documentación específica del componente.
+
+La ficha también establece que los valores ya están convertidos y no requieren escalado adicional de registros; que `SQL NULL` representa información ausente o no disponible y no debe imputarse; y que el campo aplica a ambos inversores cuando hay valores disponibles, aunque los canales estructurales inactivos fueron depurados.
+
+**Implicación para el diseño:** conservar el payload original como JSON (evaluar `JSONB` en PostgreSQL) y mantener su campo de tiempo asociado. No descomponer sus posiciones en atributos relacionales con semántica supuesta. Esta decisión se debe revisar si el diccionario aporta posteriormente una definición explícita de los elementos.
