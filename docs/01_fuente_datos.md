@@ -453,3 +453,15 @@ La agrupación de valores no nulos de `maxchgcurrset` mostró un único valor en
 | 2 | 80.0 | 947.776 |
 
 Por tanto, todos los valores no nulos observados de este parámetro son 80.0 en ambos inversores. Se mantiene la distinción entre registros con valor y registros SQL NULL; no se completa el dato ausente por inferencia.
+
+
+### Valores observados de `settings.cvvolt` y `settings.floatvolt`
+
+Se agruparon las combinaciones no nulas de los parámetros de voltaje de carga y flotación:
+
+| Inversor | Ambos en 57.6 | Solo `cvvolt` en 57.6 | Solo `floatvolt` en 57.6 |
+|---:|---:|---:|---:|
+| 1 | 1.277.942 | 686 | 540 |
+| 2 | 946.601 | 1.042 | 983 |
+
+Todos los valores no nulos observados de ambos parámetros son 57.6 en los dos inversores. Se identifican registros parciales donde uno de los dos campos es SQL NULL. Se preservan los valores ausentes y no se imputan.
