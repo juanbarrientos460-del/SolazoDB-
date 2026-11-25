@@ -429,3 +429,15 @@ Al agrupar los valores no nulos por inversor, el único código observado fue:
 | 2 | 4 | 46.253 |
 
 En total se observaron 93.883 registros no nulos, todos con el valor `4`. El significado técnico de ese código no se interpreta sin una correspondencia explícita en la documentación oficial. El atributo conserva sus valores originales y se mantiene anulable, dado el alto porcentaje de SQL NULL.
+
+
+### Valores observados de configuración de salida en `settings`
+
+Se agruparon las combinaciones no nulas de `outvoltset` y `outfreqset`:
+
+| Inversor | Voltaje 230.0 y frecuencia 50.0 | Solo voltaje 230.0 | Solo frecuencia 50.0 |
+|---:|---:|---:|---:|
+| 1 | 1.278.084 | 672 | 606 |
+| 2 | 946.646 | 1.056 | 1.030 |
+
+En todos los grupos observados, los valores disponibles fueron 230.0 para `outvoltset` y 50.0 para `outfreqset`. Esto muestra coincidencia de los valores registrados entre ambos inversores. También existen registros parciales en los que uno de los dos atributos es SQL NULL. Se preserva esa ausencia y no se completa por inferencia.
