@@ -29,3 +29,8 @@ La base SQLite fue abierta en DBeaver. Se identificaron ocho tablas principales 
 ## Hallazgo adicional de calidad
 
 En la revisión de las filas de `analog_measurements` con `battvolt = 0` se identificaron tres registros, todos del inversor 2 (fechas UTC: 2026-05-12 10:16:17, 2026-05-15 04:10:28 y 2026-06-19 04:35:37). En los tres también aparecen en cero `battcurr`, `pv1volt`, `pv1curr`, `pv1power`, `linevolta`, `linecurra` y `gridpowerw_a`, mientras `battsoc` registra 87. El patrón queda documentado como caso pendiente de interpretación; no se clasifica como error ni se modifica el dato original.
+
+
+### Cruce exploratorio con `status`
+
+Se cruzaron las tres lecturas con `battvolt = 0` con la tabla `status` por `inverter` y `read_ts`. El registro del 2026-05-12 10:16:17 presentó varios campos de estado; el del 2026-05-15 04:10:28 no presentó valores de estado útiles en la coincidencia exacta; y el del 2026-06-19 04:35:37 solo presentó `startupstatus = 1`. El resultado indica disponibilidad desigual de datos de estado, pero no prueba una causa física ni un error. Se documenta una siguiente revisión de registros cercanos en el tiempo.
