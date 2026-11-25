@@ -318,3 +318,10 @@ La ficha del diccionario de columnas para `fault_history.faulthistoryrecord00` c
 La ficha también establece que los valores ya están convertidos y no requieren escalado adicional de registros; que `SQL NULL` representa información ausente o no disponible y no debe imputarse; y que el campo aplica a ambos inversores cuando hay valores disponibles, aunque los canales estructurales inactivos fueron depurados.
 
 **Implicación para el diseño:** conservar el payload original como JSON (evaluar `JSONB` en PostgreSQL) y mantener su campo de tiempo asociado. No descomponer sus posiciones en atributos relacionales con semántica supuesta. Esta decisión se debe revisar si el diccionario aporta posteriormente una definición explícita de los elementos.
+
+
+### Semántica de la marca de tiempo de `faulthistoryrecord00`
+
+El diccionario de columnas define `fault_history.faulthistoryrecord00_time` como un valor `REAL` que contiene el tiempo calibrado del evento decodificado desde el payload histórico `faulthistoryrecord00`. Está expresado como timestamp Unix fraccional en segundos desde 1970-01-01 UTC. El valor ya está convertido y no requiere escalado adicional. `SQL NULL` representa un tiempo ausente o no disponible y no debe imputarse.
+
+**Implicación para PostgreSQL:** se puede transformar a `TIMESTAMPTZ` mediante conversión explícita desde segundos Unix, manteniendo la zona horaria UTC. Este campo debe conservar su asociación con el payload `faulthistoryrecord00`; no debe confundirse con la hora de inserción de la fila.
