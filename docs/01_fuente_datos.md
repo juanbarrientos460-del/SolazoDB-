@@ -373,3 +373,15 @@ Esta definición confirma que no se deben asignar significados a las posiciones 
 El diccionario de columnas define `settings.battsetreserve` (posición 118) como tipo SQLite `TEXT`, codificado como arreglo JSON en texto UTF-8. Conserva el payload original de múltiples registros y la semántica de sus elementos depende del componente (`component-defined`). Los valores ya están convertidos y no requieren escalado adicional. `SQL NULL` representa un valor ausente o no disponible y no debe imputarse. El campo aplica a ambos inversores cuando hay valores disponibles; los canales estructurales inactivos fueron depurados.
 
 Al igual que `reserve`, no se deben asignar significados supuestos a las posiciones del arreglo. Se recomienda preservar el contenido como JSON (candidato a `JSONB` en PostgreSQL), distinguiendo SQL NULL de valores JSON como `[null]`.
+
+
+### Validación de columnas JSON en `settings` (reserva)
+
+Se verificaron las columnas `reserve` y `battsetreserve`:
+
+| Columna | Registros totales | SQL NULL | JSON válido no nulo | JSON inválido |
+|---|---:|---:|---:|---:|
+| `reserve` | 2.284.775 | 6.297 | 2.278.478 | 0 |
+| `battsetreserve` | 2.284.775 | 4.819 | 2.279.956 | 0 |
+
+Todos los valores no nulos de ambas columnas son JSON válido. Se mantiene la distinción entre SQL `NULL` (dato ausente/no disponible) y arreglos JSON como `[null]`; no se deben reemplazar automáticamente por cero ni interpretar las posiciones sin documentación específica del componente. Para el modelo PostgreSQL se propone conservar ambos arreglos como `JSONB`, sujeto a la definición final del esquema.
