@@ -359,3 +359,10 @@ Se ejecutó una validación con las funciones `json_valid` y comprobación de `I
 Todos los valores no nulos de ambos campos son JSON válido. En muestras se observaron arreglos de 15 posiciones en `reserve` y de 8 posiciones en `battsetreserve`, además de arreglos como `[null]`. Estos arreglos JSON no deben confundirse con `SQL NULL`: el primero es un valor JSON presente y el segundo representa ausencia SQL.
 
 **Implicación para PostgreSQL:** ambos campos son candidatos para conservarse como `JSONB`, preservando los valores JSON y los SQL NULL. Antes de interpretar o normalizar sus posiciones, se debe consultar la descripción y semántica de ambos campos en el diccionario oficial de columnas.
+
+
+### Definición oficial del campo `settings.reserve`
+
+El diccionario de columnas define `settings.reserve` (posición 77) como tipo SQLite `TEXT`, codificado como arreglo JSON en texto UTF-8. El campo conserva el payload original de múltiples registros; la semántica de sus elementos depende del componente (`component-defined`). Los valores ya están convertidos y no requieren escalado adicional. `SQL NULL` significa que el valor está ausente o no disponible y no debe imputarse. El campo aplica a ambos inversores cuando hay valores disponibles; los canales estructurales inactivos fueron depurados.
+
+Esta definición confirma que no se deben asignar significados a las posiciones del arreglo sin documentación específica del componente. Se mantiene la recomendación de preservar el contenido como JSON (candidato a `JSONB` en PostgreSQL), diferenciando SQL NULL de valores JSON como `[null]`.
