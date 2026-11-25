@@ -170,3 +170,32 @@ Se ejecutó una consulta de conteo de valores nulos para seis variables de medic
 | `pv1curr` | 58.001 | 1,94 % |
 
 Los porcentajes se calcularon respecto al total de filas de `analog_measurements` y se redondearon a dos decimales. Se confirma la presencia de valores faltantes en las seis variables revisadas. Este hallazgo no demuestra por sí solo que los registros sean inválidos: antes de definir reglas de limpieza o restricciones `NOT NULL`, se debe revisar la distribución de nulos por inversor y su coincidencia entre variables. No se reemplazan ni eliminan valores en esta etapa.
+
+
+### Perfil de valores nulos en variables eléctricas de `analog_measurements`
+
+Se evaluaron los valores nulos de seis variables relevantes de batería y generación fotovoltaica sobre los 2.989.759 registros de `analog_measurements`.
+
+| Variable | Nulos | Porcentaje del total |
+|---|---:|---:|
+| `battsoc` | 57.931 | 1,938 % |
+| `battvolt` | 58.141 | 1,945 % |
+| `battcurr` | 58.217 | 1,947 % |
+| `pv1power` | 58.660 | 1,962 % |
+| `pv1volt` | 59.379 | 1,986 % |
+| `pv1curr` | 58.001 | 1,940 % |
+
+#### Distribución por inversor
+
+| Variable | Inversor 1: nulos | Inversor 2: nulos |
+|---|---:|---:|
+| `battsoc` | 809 | 57.122 |
+| `battvolt` | 771 | 57.370 |
+| `battcurr` | 854 | 57.363 |
+| `pv1power` | 1.233 | 57.427 |
+| `pv1volt` | 1.428 | 57.951 |
+| `pv1curr` | 790 | 57.211 |
+
+Los resultados muestran una concentración marcada de nulos en el inversor 2. En las seis variables, los porcentajes de nulos por inversor son aproximadamente 0,05–0,09 % para el inversor 1 y 4,14–4,20 % para el inversor 2. Esta diferencia es un hallazgo de perfilamiento que requiere investigación; por sí sola no demuestra una falla física ni permite determinar la causa de los valores ausentes.
+
+Los valores nulos se conservarán como ausentes durante la preparación y migración. No se sustituirán automáticamente por cero, porque cero puede ser una medición válida y no equivale a un dato desconocido.
