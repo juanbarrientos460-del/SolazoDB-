@@ -139,3 +139,18 @@ Se consultaron las filas de `analog_measurements` donde `battvolt = 0`. Las tres
 En las tres filas también se observaron `linevolta = 0`, `linecurra = 0` y `gridpowerw_a = 0`. El estado de carga `battsoc` se mantuvo en 87. El patrón muestra que el voltaje de batería cero coincide con ceros en varias otras variables eléctricas de la misma lectura.
 
 La interpretación sigue siendo **pendiente de validación**: podría relacionarse con inactividad, desconexión o una condición de adquisición/registro, pero estas posibilidades no pueden confirmarse solo con las columnas consultadas. No se eliminan ni se convierten estos valores durante esta etapa exploratoria.
+
+
+### Cruce con la tabla status en la misma marca temporal
+
+Se realizó un LEFT JOIN entre `analog_measurements` y `status` utilizando simultáneamente `inverter` y `read_ts`, limitado a las tres lecturas con `battvolt = 0`. Los resultados fueron:
+
+| Fecha UTC | `startupstatus` | `outstatus` | `chgstatus` | Otros campos de estado |
+|---|---:|---:|---:|---|
+| 2026-05-12 10:16:17 | 1 | 0 | 0 | Se obtuvieron valores en `paramode`, `ecomode`, `sysstateflag`, `sysalarmflag` y `derbattstate`; `derinverterstate` quedó vacío. |
+| 2026-05-15 04:10:28 | Sin coincidencia completa | Sin coincidencia completa | Sin coincidencia completa | Los campos escalares aparecen vacíos y los arreglos de estado aparecen como `[null]`. |
+| 2026-06-19 04:35:37 | 1 | Sin dato | Sin dato | Los demás campos consultados aparecen vacíos. |
+
+El cruce permite observar que la primera lectura sí tiene varios campos de estado disponibles en la misma marca temporal; la segunda no presenta datos de estado útiles en el resultado; y la tercera solo presenta `startupstatus = 1`. Por tanto, la información de `status` es incompleta o variable para estos tres casos.
+
+Este resultado no permite concluir por sí solo si hubo desconexión, inactividad o un problema de captura. La ausencia de valores en el cruce exacto tampoco demuestra que no existan registros cercanos en el tiempo. Como siguiente validación se buscarán las filas de `status` temporalmente más cercanas a cada lectura, midiendo la diferencia en segundos. Se conservan los datos originales sin alteración.
