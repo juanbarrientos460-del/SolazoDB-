@@ -484,3 +484,16 @@ Se agruparon `bmsset`, `bmsprotocal` y `battpacknotunion` por inversor. La combi
 | 2 | (1, 1, 0) | 945.780 |
 
 También se observaron combinaciones con uno o varios campos SQL NULL. Los valores ausentes se conservan como tales y no se interpretan como cero. Los códigos 0 y 1 no se traducen a estados o significados técnicos sin una definición explícita del diccionario oficial.
+
+
+### Valores no nulos individuales de parámetros BMS en `settings`
+
+La consulta de valores distintos confirmó un solo código no nulo para cada campo:
+
+| Columna | Valor observado | Registros no nulos |
+|---|---:|---:|
+| `battpacknotunion` | 0 | 2.225.986 |
+| `bmsprotocal` | 1 | 2.226.428 |
+| `bmsset` | 1 | 2.226.209 |
+
+Los resultados describen los códigos almacenados, no su interpretación funcional. Los campos permanecen anulables en el modelo hasta validar sus definiciones y reglas de captura con la documentación de OpenCEM.
