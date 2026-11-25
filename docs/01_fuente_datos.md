@@ -472,3 +472,15 @@ Todos los valores no nulos observados de ambos parámetros son 57.6 en los dos i
 La inspección con `PRAGMA table_info(settings)` confirmó 176 columnas (posiciones 0 a 175). Los únicos campos declarados como NOT NULL en SQLite son `read_ts` (REAL) e `inverter` (INTEGER); los otros 174 campos permiten SQL NULL en la estructura de origen. Esta observación describe el esquema SQLite y no determina por sí sola las restricciones definitivas de PostgreSQL.
 
 Los campos incluyen parámetros de prioridad y modo de salida, límites y protecciones de red, parámetros de batería y carga, programación horaria, reservas codificadas como arreglos JSON y curvas/funciones de control. Las descripciones y unidades de cada campo se deben contrastar con el diccionario oficial de OpenCEM antes de cerrar el diccionario de datos de SolarDB.
+
+
+### Combinaciones observadas de parámetros BMS en `settings`
+
+Se agruparon `bmsset`, `bmsprotocal` y `battpacknotunion` por inversor. La combinación más frecuente fue `(1, 1, 0)`:
+
+| Inversor | Combinación (bmsset, bmsprotocal, battpacknotunion) | Registros |
+|---:|---|---:|
+| 1 | (1, 1, 0) | 1.277.292 |
+| 2 | (1, 1, 0) | 945.780 |
+
+También se observaron combinaciones con uno o varios campos SQL NULL. Los valores ausentes se conservan como tales y no se interpretan como cero. Los códigos 0 y 1 no se traducen a estados o significados técnicos sin una definición explícita del diccionario oficial.
